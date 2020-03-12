@@ -5,6 +5,33 @@ import json
 import requests
 
 
+def run_ticketmaster_query(postal_code=None, city=None, state_code=None, start_date_time=date.today(),
+                           end_date_time=None):
+    url = "https://app.ticketmaster.com/discovery/v2/events.json"
+    params = dict()
+    params["apikey"] = ""
+    if postal_code:
+        params["postalCode"] = postal_code
+    if city:
+        params["city"] = city
+    if state_code:
+        params["stateCode"] = state_code
+    if start_date_time:
+        start_date_time = str(start_date_time) + "T00:00:00Z"
+        params["startDateTime"] = str(start_date_time)
+    if end_date_time:
+        end_date_time = str(end_date_time) + "T23:59:00Z"
+        params["endDateTime"] = str(end_date_time)
+
+    param_string = urllib.parse.urlencode(params).replace("%3A", ":")
+    url += "?" + param_string
+    request = requests.get(url)
+    if request.status_code == 200:
+        return request.json()
+    else:
+        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, url))
+
+
 def searchQuery(location="NYC"):
     searchQuery = '''
         {
@@ -83,6 +110,8 @@ def query_flights(origin, destination, departureDate):
 
     return return_info
 
-print(run_yelp_query(searchQuery()))
+# print(run_yelp_query(searchQuery()))
+#
+# print(query_flights("SFO", "ORD", "2020-05-05"))
 
-print(query_flights("SFO", "ORD", "2020-05-05"))
+# print(run_ticketmaster_query(city="Atlanta", state_code="GA"))
