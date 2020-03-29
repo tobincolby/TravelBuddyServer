@@ -74,10 +74,13 @@ def query_flights(origin, destination_code, departureDate):
     destination_code += "-sky"
     url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/" + origin + "/"+destination_code+"/"+departureDate
 
-    headers = {}
+    headers = {"x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+"x-rapidapi-key": "66539680acmsh2056934c1cda300p12c869jsn47c68db584b4"}
 
     response = requests.request("GET", url, headers=headers)
     text = json.loads(response.text)
+    if 'message' in text:
+        return "sleep"
     places = text["Places"]
     carriers = text["Carriers"]
     quotes = text["Quotes"]
