@@ -69,12 +69,13 @@ def run_yelp_query(query): # A simple function to use requests.post to make the 
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
 
-def query_flights(origin, destination, departureDate):
+def query_flights(origin, destination_code, departureDate):
     origin += "-sky"
-    destination += "-sky"
-    url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/" + origin + "/"+destination+"/"+departureDate
+    destination_code += "-sky"
+    url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/" + origin + "/"+destination_code+"/"+departureDate
 
-    headers = {}
+    headers = {"x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+"x-rapidapi-key": "66539680acmsh2056934c1cda300p12c869jsn47c68db584b4"}
 
     response = requests.request("GET", url, headers=headers)
     text = json.loads(response.text)
@@ -104,8 +105,11 @@ def query_flights(origin, destination, departureDate):
     return_info["price"] = smallest_quote["MinPrice"]
     return_info["airline"] = airline
     return_info["destination"] = destination
+    return_info["destination_code"] = destination_code[:-4]
     return_info["origin"] = origin
     return_info["departure_date"] = departureDate
+
+
 
 
     return return_info
