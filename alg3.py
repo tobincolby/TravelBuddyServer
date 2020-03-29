@@ -1,14 +1,11 @@
+#in travelbuddy
+
 from datetime import datetime
 from datetime import timedelta
 import sys
 
 class TSP:
 
-    # path = []
-    # paths = []
-    # global_mincost = sys.maxsize
-    # visited = []
-    # adj = []
     def __init__(self, trip):
         self.paths = []
 
