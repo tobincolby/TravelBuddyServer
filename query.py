@@ -79,12 +79,16 @@ def query_flights(origin, destination_code, departureDate):
 
     response = requests.request("GET", url, headers=headers)
     text = json.loads(response.text)
+    print(origin, destination_code, departureDate)
+    print(text)
     if 'message' in text:
         return "sleep"
     places = text["Places"]
     carriers = text["Carriers"]
     quotes = text["Quotes"]
 
+    if len(quotes) == 0:
+        return ""
     smallest_quote = quotes[0]
     for quote in quotes:
         if quote["Direct"] and quote["OutboundLeg"]["DepartureDate"][:10] == departureDate and quote["MinPrice"] < smallest_quote["MinPrice"]:

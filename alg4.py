@@ -17,7 +17,8 @@ class TSP:
         self.startdate = datetime.strptime(trip[2][0], "%Y-%m-%d")
         self.enddate = datetime.strptime(trip[2][1], "%Y-%m-%d")
         self.daterange_size = (self.enddate - self.startdate).days
-        self.already_queried = {}
+        self.already_queried = dict()
+
 
         tl = 0
         for city in trip[1]:
@@ -29,7 +30,13 @@ class TSP:
         for i in range(self.daterange_size - self.triplength + 1):
             flightdate_str = datetime.strftime(self.startdate + timedelta(i), '%Y-%m-%d')
             for city in self.cities:
-                flight = self.getFlight(self.origin, city, flightdate_str)
+                if (self.origin, city, flightdate_str) in self.already_queried:
+                    flight = self.already_queried[(self.origin, city, flightdate_str)]
+                else:
+                    flight = self.getFlight(self.origin, city, flightdate_str)
+                    if flight == "":
+                        return
+                    self.already_queried[(self.origin, city, flightdate_str)] = flight
                 self.getNext(flight, [self.origin, city], [flight], flight['price'])
 
 
@@ -42,7 +49,13 @@ class TSP:
 
         # trip is over / need to go home
         if len(visited) == len(self.cities)+1:
-            next_flight = self.getFlight(prev['destination_code'], self.origin, leave_on)
+            if (prev['destination_code'], self.origin, leave_on) in self.already_queried:
+                next_flight = self.already_queried[(prev['destination_code'], self.origin, leave_on)]
+            else:
+                next_flight = self.getFlight(prev['destination_code'], self.origin, leave_on)
+                if next_flight == "":
+                    return
+                self.already_queried[(prev['destination_code'], self.origin, leave_on)] = next_flight
             path.append(next_flight)
             price += next_flight['price']
             self.paths.append((price, path))
@@ -51,7 +64,13 @@ class TSP:
         # go to new city
         for city in self.cities:
             if (city not in visited) or (len(visited) == len(self.cities)+1 and city == self.origin):
-                next_flight = self.getFlight(prev['destination_code'], city, leave_on)
+                if (prev['destination_code'], city, leave_on) in self.already_queried:
+                    next_flight = self.already_queried[(prev['destination_code'], city, leave_on)]
+                else:
+                    next_flight = self.getFlight(prev['destination_code'], city, leave_on)
+                    if next_flight == "":
+                        continue
+                    self.already_queried[(prev['destination_code'], city, leave_on)] = next_flight
                 visited.append(city)
                 path.append(next_flight)
                 price += next_flight['price']
@@ -65,15 +84,19 @@ class TSP:
             tries += 1
             try:
                 next_flight = query.query_flights(origin, dest, date)
+                if next_flight == "":
+                    return ""
                 passed = True
                 while next_flight == "sleep":
                     time.sleep(10)
                     next_flight = query.query_flights(origin, dest, date)
+                    if next_flight == "":
+                        return ""
             except:
                 time.sleep(0.1)
 
         if tries == 5:
-            raise Error("failed to get flight")
+            raise Exception("failed to get flight")
         return next_flight
 
 
