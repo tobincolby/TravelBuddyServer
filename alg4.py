@@ -27,17 +27,17 @@ class TSP:
 
 
     def fromOrigin(self):
-        for i in range(self.daterange_size - self.triplength + 1):
-            flightdate_str = datetime.strftime(self.startdate + timedelta(i), '%Y-%m-%d')
-            for city in self.cities:
-                if (self.origin, city, flightdate_str) in self.already_queried:
-                    flight = self.already_queried[(self.origin, city, flightdate_str)]
-                else:
-                    flight = self.getFlight(self.origin, city, flightdate_str)
-                    if flight == "":
-                        return
-                    self.already_queried[(self.origin, city, flightdate_str)] = flight
-                self.getNext(flight, [self.origin, city], [flight], flight['price'])
+        # for i in range(self.daterange_size - self.triplength + 1):
+        flightdate_str = datetime.strftime(self.startdate + timedelta(0), '%Y-%m-%d')
+        for city in self.cities:
+            if (self.origin, city, flightdate_str) in self.already_queried:
+                flight = self.already_queried[(self.origin, city, flightdate_str)]
+            else:
+                flight = self.getFlight(self.origin, city, flightdate_str)
+                if flight == "":
+                    return
+                self.already_queried[(self.origin, city, flightdate_str)] = flight
+            self.getNext(flight, [self.origin, city], [flight], flight['price'])
 
 
     def getNext(self, prev, visited, path, price):
@@ -100,15 +100,15 @@ class TSP:
         return next_flight
 
 
-trip = "ATL", {"SFO": 3, "LAX":4, "SEA":2}, ["2020-04-03", "2020-04-30"]
-tsp = TSP(trip)
-print(tsp.fromOrigin())
-#print(query.query_flights('ATL', 'SFO', '2020-04-03'))
-
-# prints all possible paths (comment out to avoid terminal clog)
-print(tsp.paths)
-print()
-
-print("cheapest trip: ")
-print(sorted(tsp.paths, key=itemgetter(0))[0])
+# trip = "ATL", {"SFO": 3, "LAX":4, "SEA":2}, ["2020-04-03", "2020-04-30"]
+# tsp = TSP(trip)
+# print(tsp.fromOrigin())
+# #print(query.query_flights('ATL', 'SFO', '2020-04-03'))
+#
+# # prints all possible paths (comment out to avoid terminal clog)
+# print(tsp.paths)
+# print()
+#
+# print("cheapest trip: ")
+# print(sorted(tsp.paths, key=itemgetter(0))[0])
 
