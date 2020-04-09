@@ -3,6 +3,7 @@ import urllib.parse
 from datetime import date
 import json
 import requests
+from public_config import skyscanner_headers, yelp_auth_string
 
 
 def run_ticketmaster_query(postal_code=None, city=None, state_code=None, start_date_time=date.today(),
@@ -35,7 +36,7 @@ def run_ticketmaster_query(postal_code=None, city=None, state_code=None, start_d
 def searchQuery(location="NYC"):
     searchQuery = '''
         {
-            search(location: "%s") {
+            search(term: "food", location: "%s", limit: 5) {
                 business {
                     id
                     name
@@ -59,7 +60,7 @@ def searchQuery(location="NYC"):
     return searchQuery
 
 def run_yelp_query(query): # A simple function to use requests.post to make the API call. Note the json= section.
-    headers = {"Authorization": "",
+    headers = {"Authorization": yelp_auth_string,
     "Content-Type": "application/graphql",
     }
     request = requests.post('https://api.yelp.com/v3/graphql', data=query, headers=headers)
@@ -74,19 +75,17 @@ def query_flights(origin, destination_code, departureDate):
     destination_code += "-sky"
     url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/US/USD/en-US/" + origin + "/"+destination_code+"/"+departureDate
 
-    headers = {"x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-"x-rapidapi-key": "66539680acmsh2056934c1cda300p12c869jsn47c68db584b4"}
-
-    response = requests.request("GET", url, headers=headers)
+    response = requests.request("GET", url, headers=skyscanner_headers)
     text = json.loads(response.text)
     print(origin, destination_code, departureDate)
-    print(text)
+
+    # print(text)
     if 'message' in text:
         return "sleep"
     places = text["Places"]
     carriers = text["Carriers"]
+    print(carriers)
     quotes = text["Quotes"]
-
     if len(quotes) == 0:
         return ""
     smallest_quote = quotes[0]
@@ -99,20 +98,32 @@ def query_flights(origin, destination_code, departureDate):
         if carrier["CarrierId"] in smallest_quote["OutboundLeg"]["CarrierIds"]:
             airline = carrier["Name"]
     destination = ""
+
     origin = ""
+    origin_code = ""
+    destination_city = ""
+    origin_city = ""
     for place in places:
         if place["PlaceId"] == smallest_quote["OutboundLeg"]["DestinationId"]:
             destination = place["Name"]
+            destination_code = place["IataCode"]
+            destination_city = place["CityName"]
         if place["PlaceId"] == smallest_quote["OutboundLeg"]["OriginId"]:
-
+            origin_code = place["IataCode"]
             origin = place["Name"]
+            origin_city = place["CityName"]
+
+
 
     return_info = dict()
     return_info["price"] = smallest_quote["MinPrice"]
     return_info["airline"] = airline
     return_info["destination"] = destination
-    return_info["destination_code"] = destination_code[:-4]
+    return_info["destination_code"] = destination_code
     return_info["origin"] = origin
+    return_info["origin_code"] = origin_code
+    return_info["origin_city"] = origin_city
+    return_info["destination_city"] = destination_city
     return_info["departure_date"] = departureDate
 
 

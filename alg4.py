@@ -96,14 +96,17 @@ class TSP:
                 time.sleep(0.1)
 
         if tries == 5:
-            raise Exception("failed to get flight")
+            return ""
         return next_flight
 
 
-# trip = "ATL", {"SFO": 3, "LAX":4, "SEA":2}, ["2020-04-03", "2020-04-30"]
-# tsp = TSP(trip)
-# print(tsp.fromOrigin())
-# #print(query.query_flights('ATL', 'SFO', '2020-04-03'))
+trip = "ATL", {"ORD": 3, "LAX":4, "SEA":2}, ["2020-04-010", "2020-04-20"]
+tsp = TSP(trip)
+start = datetime.now()
+print(tsp.fromOrigin())
+end = datetime.now()
+print((end - start).seconds)
+#print(query.query_flights('ATL', 'SFO', '2020-04-03'))
 #
 # # prints all possible paths (comment out to avoid terminal clog)
 # print(tsp.paths)
