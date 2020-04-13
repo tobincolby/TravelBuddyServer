@@ -20,10 +20,10 @@ _verify_password_url = 'https://www.googleapis.com/identitytoolkit/v3/relyingpar
 
 mysql = MySQL()
 
-app.config['MYSQL_DATABASE_USER'] = "root"
-app.config['MYSQL_DATABASE_PASSWORD'] = "rootpassword1177@"
-app.config['MYSQL_DATABASE_DB'] = "TravelBuddyLocal"
-app.config['MYSQL_DATABASE_HOST'] = "localhost"
+app.config['MYSQL_DATABASE_USER'] = public_config.db_user
+app.config['MYSQL_DATABASE_PASSWORD'] = public_config.db_password
+app.config['MYSQL_DATABASE_DB'] = public_config.db_name
+app.config['MYSQL_DATABASE_HOST'] = public_config.db_host
 
 mysql.init_app(app)
 
