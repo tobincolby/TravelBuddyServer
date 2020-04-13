@@ -27,17 +27,17 @@ class TSP:
 
 
     def fromOrigin(self):
-        for i in range(self.daterange_size - self.triplength + 1):
-            flightdate_str = datetime.strftime(self.startdate + timedelta(i), '%Y-%m-%d')
-            for city in self.cities:
-                if (self.origin, city, flightdate_str) in self.already_queried:
-                    flight = self.already_queried[(self.origin, city, flightdate_str)]
-                else:
-                    flight = self.getFlight(self.origin, city, flightdate_str)
-                    if flight == "":
-                        continue
-                    self.already_queried[(self.origin, city, flightdate_str)] = flight
-                self.getNext(flight, [self.origin, city], [flight], flight['price'])
+        # for i in range(self.daterange_size - self.triplength + 1):
+        flightdate_str = datetime.strftime(self.startdate + timedelta(0), '%Y-%m-%d')
+        for city in self.cities:
+            if (self.origin, city, flightdate_str) in self.already_queried:
+                flight = self.already_queried[(self.origin, city, flightdate_str)]
+            else:
+                flight = self.getFlight(self.origin, city, flightdate_str)
+                if flight == "":
+                    continue
+                self.already_queried[(self.origin, city, flightdate_str)] = flight
+            self.getNext(flight, [self.origin, city], [flight], flight['price'])
 
 
     def getNext(self, prev, visited, path, price):
@@ -100,13 +100,13 @@ class TSP:
         return next_flight
 
 
-trip = "ATL", {"ORD": 3, "LAX":4, "SEA":2}, ["2020-04-10", "2020-04-20"]
-tsp = TSP(trip)
-start = datetime.now()
-tsp.fromOrigin()
-print(sorted(tsp.paths, key=itemgetter(0))[0])
-end = datetime.now()
-print((end - start).microseconds)
+# trip = "ATL", {"ORD": 3, "LAX":2, "SEA":2, "TPA": 2, "PHL": 2}, ["2020-04-10", "2020-05-01"]
+# tsp = TSP(trip)
+# start = datetime.now()
+# tsp.fromOrigin()
+# print(sorted(tsp.paths, key=itemgetter(0))[0])
+# end = datetime.now()
+# print((end - start).total_seconds())
 #print(query.query_flights('ATL', 'SFO', '2020-04-03'))
 #
 # # prints all possible paths (comment out to avoid terminal clog)
