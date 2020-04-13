@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 3. Drop the "public_config.py" file from Canvas and "travelbuddy-firebase.json" into the main project root.
 
-##Database Setup
+## Database Setup
 
 1. Run the following command with the file "TravelBuddyDB.sql"
 
