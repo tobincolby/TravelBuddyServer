@@ -1,6 +1,11 @@
 # TravelBuddy Server Guide
 This is how to setup and configure the server for TravelBuddy locally
 
+## Requirements
+1. Python3
+2. MySQL 8.0
+3. public_config.py and travelbuddy-firebase.json files provided in submission
+
 ## Installation
 
 1. Create a new Python3 Virtual Environment
