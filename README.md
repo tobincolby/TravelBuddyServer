@@ -1,6 +1,11 @@
 # TravelBuddy Server Guide
 This is how to setup and configure the server for TravelBuddy locally
 
+## Important Files
+1. alg4.py contains the code that actually runs the TSP algorithm
+2. query.py houses all code that is used to query various 3rd party APIs
+3. TravelBuddyServer.py houses all of the endpoints for the react native application
+
 ## Requirements
 1. Python3
 2. MySQL 8.0
