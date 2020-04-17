@@ -20,7 +20,7 @@ This is how to setup and configure the server for TravelBuddy locally
 pip install -r requirements.txt
 ```
 
-3. Drop the "public_config.py" file from Canvas and "travelbuddy-firebase.json" into the main project root.
+3. Drop the "public_config.py" file from Canvas and "travelbuddy-firebase.json" into the same directory as TravelBuddyServer.py.
 
 ## Database Setup
 
@@ -30,13 +30,13 @@ pip install -r requirements.txt
 mysql -u user_name -p TravelBuddyLocal < TravelBuddyDB.sql
 ```
 
-2. Update the public_config.py file to include the correct credentials for the system to access the DB.
+2. Update the public_config.py file to include your MySQL username and password to allow the application access to MySQL.
 
 
 ## How to run Server
 
 1. Activate the virtual environment
-2. SetUp Flask
+2. Setup Flask
 
 ```bash
 export FLASK_APP="TravelBuddyServer.py"
@@ -46,3 +46,5 @@ export FLASK_APP="TravelBuddyServer.py"
 ```bash
 flask run
 ```
+
+4. Now you may run the React Native TravelBuddy Application
